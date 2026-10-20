@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Tri Ân 20/10 • Tú IT Edition 💖</title>
+
+  <!-- Google Fonts: Quicksand & Dancing Script -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Quicksand', 'sans-serif'],
+            script: ['"Dancing Script"', 'cursive']
+          },
+          colors: {
+            pastel: {
+              cream: '#FFFBFD',
+              lightPink: '#FCE4EC',
+              mediumPink: '#F8BBD0',
+              peach: '#F48FB1',
+              deepPink: '#EC407A',
+              roseRed: '#D81B60'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <style>
+    /* Chống zoom ngoài ý muốn & tối ưu chạm cảm ứng */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(180deg, #FFFBFD 0%, #FCE4EC 45%, #F8BBD0 100%);
+      min-height: 100dvh;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Hiệu ứng Rung Màn Hình Khi Bùng Nổ (Grand Finale) */
+    @keyframes screenShake {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      15% { transform: translate(-5px, 4px) rotate(-1.2deg); }
+      30% { transform: translate(6px, -4px) rotate(1.5deg); }
+      45% { transform: translate(-6px, -3px) rotate(-1deg); }
+      60% { transform: translate(5px, 4px) rotate(1.2deg); }
+      75% { transform: translate(-3px, 2px) rotate(-0.5deg); }
+      90% { transform: translate(3px, -1px) rotate(0.5deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    .screen-shake-active {
+      animation: screenShake 0.6s cubic-bezier(.36, .07, .19, .97) both;
+    }
+
+    /* Hiệu ứng Rung Lắc Ngang Cho Lỗi Nhập Mật Mã */
+    @keyframes inputShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+
+    .animate-shake {
+      animation: inputShake 0.45s ease-in-out;
+    }
+
+    /* Mây Trôi Bồng Bềnh (Floating Clouds Keyframes) */
+    @keyframes floatCloudLeft {
+      0% { transform: translateX(-140%); }
+      100% { transform: translateX(150vw); }
+    }
+
+    @keyframes floatCloudRight {
+      0% { transform: translateX(140vw); }
+      100% { transform: translateX(-150%); }
+    }
+
+    .cloud-layer-1 {
+      animation: floatCloudLeft 32s linear infinite;
+    }
+
+    .cloud-layer-2 {
+      animation: floatCloudRight 48s linear infinite;
+    }
+
+    .cloud-layer-3 {
+      animation: floatCloudLeft 60s linear infinite;
+    }
+
+    /* Trái tim trôi bồng bềnh ở nền */
+    @keyframes floatHeart {
+      0% { transform: translateY(105vh) scale(0.6) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.6; }
+      80% { opacity: 0.8; }
+      100% { transform: translateY(-15vh) scale(1.1) rotate(25deg); opacity: 0; }
+    }
+
+    .floating-heart {
+      position: fixed;
+      pointer-events: none;
+      animation: floatHeart linear infinite;
+      z-index: 1;
+    }
+
+    /* Glassmorphism chuẩn cao cấp */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(244, 143, 177, 0.4);
+      box-shadow: 0 15px 35px -5px rgba(236, 64, 122, 0.12), 0 8px 16px -6px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Nút chạy trốn mượt mà */
+    .dodge-btn {
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      will-change: transform, left, top;
+    }
+
+    /* Ẩn thanh cuộn nhưng vẫn cuộn được mượt */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="relative flex items-center justify-center p-0 sm:p-4 text-slate-800">
+
+  <!-- ========================================== -->
+  <!-- LỚP NỀN MÂY TRÔI (FLOATING CLOUDS LAYER)  -->
+  <!-- ========================================== -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <!-- Mây 1: Trắng kem trôi tầng cao -->
+    <div class="absolute top-6 left-0 cloud-layer-1 opacity-70">
+      <svg width="220" height="90" viewBox="0 0 220 90" fill="none">
+        <path d="M40 70C25 70 12 58 12 43C12 29 23 18 37 17C43 7 54 0 68 0C83 0 96 9 100 22C106 18 113 16 120 16C138 16 153 30 154 48C161 48 168 53 170 60C173 59 177 59 180 59C197 59 210 70 210 84C210 88 208 90 200 90H40V70Z" fill="white"/>
+      </svg>
+    </div>
+
+    <!-- Mây 2: Hồng phấn trôi tầng giữa ngược chiều -->
+    <div class="absolute top-1/3 right-0 cloud-layer-2 opacity-50">
+      <svg width="280" height="110" viewBox="0 0 280 110" fill="none">
+        <path d="M50 90C30 90 15 75 15 55C15 37 30 22 48 21C56 9 70 0 88 0C108 0 124 12 130 28C137 23 146 20 156 20C179 20 198 38 200 61C209 61 218 68 221 76C225 75 230 75 234 75C256 75 273 89 273 107C273 110 270 110 260 110H50V90Z" fill="#F8BBD0"/>
+      </svg>
+    </div>
+
+    <!-- Mây 3: Trắng trôi tầng thấp -->
+    <div class="absolute bottom-20 left-0 cloud-layer-3 opacity-60">
+      <svg width="250" height="95" viewBox="0 0 250 95" fill="none">
+        <path d="M45 75C28 75 14 62 14 46C14 31 26 19 41 18C48 8 60 0 76 0C93 0 107 10 112 24C118 20 126 17 134 17C154 17 171 32 172 52C180 52 188 58 190 65C194 64 198 64 202 64C221 64 236 76 236 91C236 95 234 95 225 95H45V75Z" fill="#FFFFFF"/>
+      </svg>
+    </div>
+
+    <!-- Trái tim bay lơ lửng -->
+    <div class="floating-heart text-pink-300 text-xl" style="left: 12%; animation-duration: 14s; animation-delay: 0s;">💖</div>
+    <div class="floating-heart text-pink-400 text-2xl" style="left: 38%; animation-duration: 18s; animation-delay: 3s;">🌸</div>
+    <div class="floating-heart text-rose-300 text-lg" style="left: 65%; animation-duration: 12s; animation-delay: 5s;">✨</div>
+    <div class="floating-heart text-pink-300 text-2xl" style="left: 85%; animation-duration: 16s; animation-delay: 2s;">💕</div>
+    <div class="floating-heart text-pink-200 text-sm" style="left: 24%; animation-duration: 20s; animation-delay: 7s;">🌷</div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- KHUNG ỨNG DỤNG MOBILE-FIRST CHUẨN ĐỒNG NHẤT -->
+  <!-- ========================================== -->
+  <main id="app-container" class="relative z-10 w-full max-w-md min-h-[100dvh] sm:min-h-[844px] sm:my-4 sm:rounded-[40px] shadow-2xl flex flex-col justify-between overflow-hidden border border-pink-200/60 transition-all duration-300 bg-gradient-to-b from-[#FFFBFD]/90 via-[#FCE4EC]/75 to-[#F8BBD0]/80 backdrop-blur-md">
+
+    <!-- Top Status Bar: Branding & Nút Âm Thanh -->
+    <header class="px-5 pt-4 pb-2 flex items-center justify-between text-xs font-semibold text-pink-600/90 z-20">
+      <div class="flex items-center gap-1.5 bg-white/80 py-1 px-3 rounded-full border border-pink-200 shadow-sm">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+        <span class="tracking-wide">TÚ IT • HỆ THỐNG TRI ÂN 20/10</span>
+      </div>
+
+      <!-- Nút Bật/Tắt Âm Thanh -->
+      <button id="sound-toggle-btn" onclick="toggleAudio()" class="w-8 h-8 flex items-center justify-center bg-white/80 rounded-full border border-pink-200 shadow-sm hover:scale-105 active:scale-95 transition-all text-sm" title="Bật/Tắt Âm Thanh">
+        <span id="sound-icon">🔊</span>
+      </button>
+    </header>
+
+    <!-- NỘI DUNG CHÍNH (5 MÀN HÌNH SPA) -->
+    <div class="flex-1 px-5 py-3 flex flex-col justify-center relative z-20 overflow-y-auto no-scrollbar">
+
+      <!-- ======================================================= -->
+      <!-- PAGE 1: LỜI CHÀO MỞ ĐẦU (THE GRAND OPENING)             -->
+      <!-- ======================================================= -->
+      <section id="page-1" class="page-view flex flex-col items-center text-center animate-fade-in">
+        <!-- Badge nhỏ phía trên -->
+        <div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-pink-100 text-pink-600 text-xs font-bold tracking-wider mb-4 border border-pink-200 shadow-sm">
+          <span>👑</span> HỆ THỐNG TRI ÂN ĐỘC QUYỀN • V20.10
+        </div>
+
+        <!-- Biểu tượng máy tính + hoa hồng phong cách IT -->
+        <div class="relative w-28 h-28 my-2 flex items-center justify-center">
+          <div class="absolute inset-0 bg-pink-300/40 rounded-full blur-xl animate-pulse"></div>
+          <div class="relative w-24 h-24 bg-white/90 rounded-3xl border-2 border-pink-200 shadow-lg flex items-center justify-center text-5xl">
+            💻<span class="absolute -top-2 -right-2 text-3xl">🌸</span>
+          </div>
+        </div>
+
+        <!-- Tiêu đề lớn -->
+        <h1 class="text-2xl font-extrabold text-pink-700 leading-snug mt-3 mb-3 px-2">
+          Ladies and Gentlemen... À nhầm, Kính chào các Quý cô vĩ đại nhất của cuộc đời Tú IT! 💖
+        </h1>
+
+        <!-- Thẻ nội dung kính mờ -->
+        <div class="glass-card rounded-3xl p-5 my-3 text-sm leading-relaxed text-slate-700 text-justify border border-pink-100 shadow-sm">
+          <p class="mb-2.5">
+            🎉 <strong>Chào mừng Quý cô</strong> đã truy cập vào <span class="text-pink-600 font-semibold">Hệ thống Cổng thông tin Tri ân ngày 20/10</span> được lập trình độc quyền bởi Kỹ sư <strong>Tú IT</strong>.
+          </p>
+          <p>
+            Trước khi mở khóa bức mật thư riêng tư, hệ thống yêu cầu Quý cô thực hiện một bài đánh giá chất lượng nhân sự hoàn toàn khách quan và minh bạch! 🔍✨
+          </p>
+        </div>
+
+        <!-- Cam kết IT hài hước -->
+        <div class="grid grid-cols-3 gap-2 w-full my-3 text-[11px] font-semibold text-pink-700">
+          <div class="bg-white/70 py-1.5 px-2 rounded-xl border border-pink-100 shadow-2xs">✅ 100% Khách quan</div>
+          <div class="bg-white/70 py-1.5 px-2 rounded-xl border border-pink-100 shadow-2xs">🔒 Mã hóa 256-bit</div>
+          <div class="bg-white/70 py-1.5 px-2 rounded-xl border border-pink-100 shadow-2xs">🚀 Không ép buộc</div>
+        </div>
+
+        <!-- Nút hành động nổi bật có nhịp thở -->
+        <button onclick="goToPage(2)" class="w-full mt-4 py-4 px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white font-extrabold text-base tracking-wide shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 animate-pulse">
+          <span>BẮT ĐẦU NGHIỆM THU NGAY</span>
+          <span class="text-xl">👉</span>
+        </button>
+      </section>
+
+
+      <!-- ======================================================= -->
+      <!-- PAGE 2: GÓC SỰ THẬT HÓM HỈNH (THE DODGING QUIZ)         -->
+      <!-- ======================================================= -->
+      <section id="page-2" class="page-view hidden flex-col">
+        <!-- Thanh tiến trình câu hỏi -->
+        <div class="w-full mb-3">
+          <div class="flex items-center justify-between text-xs font-bold text-pink-600 mb-1.5">
+            <span id="quiz-step-label">CÂU HỎI 1/3</span>
+            <span class="bg-pink-100 text-pink-700 px-2.5 py-0.5 rounded-full border border-pink-200 text-[11px]">Đánh giá chất lượng</span>
+          </div>
+          <div class="w-full h-2.5 bg-white/80 rounded-full overflow-hidden p-0.5 border border-pink-200">
+            <div id="quiz-progress-bar" class="h-full bg-gradient-to-r from-pink-400 to-rose-500 rounded-full transition-all duration-500 w-1/3"></div>
+          </div>
+        </div>
+
+        <!-- Thẻ nội dung câu hỏi -->
+        <div class="glass-card rounded-3xl p-5 mb-3 text-center border border-pink-200 relative">
+          <div class="text-xs font-bold uppercase tracking-wider text-pink-500 mb-1">Mục khảo sát nhân sự</div>
+          <h2 id="quiz-question-text" class="text-base sm:text-lg font-extrabold text-slate-800 leading-snug min-h-[52px] flex items-center justify-center">
+            Độ ngoan ngoãn, lễ phép và biết điều của Tú IT đạt bao nhiêu điểm?
+          </h2>
+
+          <!-- Dòng thông báo trêu chọc khi nút chạy trốn -->
+          <div id="taunt-banner" class="mt-2.5 py-1.5 px-3 rounded-xl bg-pink-50 border border-pink-200/80 text-pink-700 text-xs font-bold min-h-[34px] flex items-center justify-center transition-all opacity-0">
+            <span id="taunt-text">Hệ thống sẵn sàng ghi nhận ý kiến!</span>
+          </div>
+        </div>
+
+        <!-- Hướng dẫn nhẹ -->
+        <div class="flex items-center justify-between px-2 mb-2 text-[11px] font-semibold text-slate-500">
+          <span>Thang điểm từ 1 đến 10:</span>
+          <span class="text-pink-600 font-bold">Chạm để chấm điểm 🎯</span>
+        </div>
+
+        <!-- VÙNG CHỨA CÁC NÚT ĐIỂM TỪ 1 ĐẾN 9 (DODGING ARENA) -->
+        <div id="dodge-arena" class="relative w-full h-52 bg-white/60 rounded-3xl border-2 border-dashed border-pink-300/80 p-3 overflow-hidden shadow-inner flex flex-wrap items-center justify-center gap-2">
+          <!-- 9 Nút chạy trốn sẽ được tạo động bằng JavaScript để tính toán vị trí an toàn tuyệt đối -->
+        </div>
+
+        <!-- NÚT ĐIỂM 10 NỔI BẬT (NÚT DUY NHẤT BẤM ĐƯỢC) -->
+        <div class="mt-3.5">
+          <button id="btn-score-10" onclick="handleScore10()" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-pink-500 to-rose-500 text-white font-extrabold text-base tracking-wide shadow-xl shadow-pink-500/35 border-2 border-white hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2.5 group">
+            <span class="text-2xl group-hover:rotate-12 transition-transform">🌟</span>
+            <span class="tracking-wider">10 ĐIỂM TUYỆT ĐỐI 💯</span>
+            <span class="text-2xl group-hover:-rotate-12 transition-transform">✨</span>
+          </button>
+        </div>
+      </section>
+
+
+      <!-- ======================================================= -->
+      <!-- PAGE 3: DASHBOARD NGHIỆM THU "MAX PING"                 -->
+      <!-- ======================================================= -->
+      <section id="page-3" class="page-view hidden flex-col animate-fade-in">
+        <!-- Tiêu đề Dashboard -->
+        <div class="text-center mb-3">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold mb-1 border border-emerald-200">
+            <span>🟢</span> HỆ THỐNG ĐÃ XÁC THỰC DỮ LIỆU
+          </div>
+          <h2 class="text-xl font-extrabold text-pink-700">
+            📊 BÁO CÁO KẾT QUẢ KHẢO SÁT ĐỘC LẬP
+          </h2>
+          <p class="text-xs text-slate-500 font-medium">Bản kiểm toán chỉ số nhân sự IT đạt mức kỷ lục</p>
+        </div>
+
+        <!-- 3 Thẻ Metric KPI Cards -->
+        <div class="space-y-2.5 mb-3">
+          <!-- KPI 1 -->
+          <div class="glass-card rounded-2xl p-3.5 border border-pink-200">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <span>😇</span> Chỉ số Ngoan ngoãn & Lễ phép
+              </span>
+              <span class="text-xs font-extrabold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-md border border-pink-200">
+                10 / 10 (100% Tuyệt đối)
+              </span>
+            </div>
+            <div class="w-full h-2 bg-pink-100 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-pink-400 to-rose-500 rounded-full w-full"></div>
+            </div>
+          </div>
+
+          <!-- KPI 2 -->
+          <div class="glass-card rounded-2xl p-3.5 border border-pink-200">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <span>😎</span> Độ Đẹp trai & Đáng tin cậy
+              </span>
+              <span class="text-xs font-extrabold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-md border border-pink-200">
+                10 / 10 (Max Ping - 0% Lỗi)
+              </span>
+            </div>
+            <div class="w-full h-2 bg-pink-100 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-pink-400 to-rose-500 rounded-full w-full"></div>
+            </div>
+          </div>
+
+          <!-- KPI 3 -->
+          <div class="glass-card rounded-2xl p-3.5 border border-pink-200">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <span>🥰</span> Mức độ Xứng đáng được yêu thương
+              </span>
+              <span class="text-xs font-extrabold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-md border border-pink-200">
+                10 / 10 (Vượt chuẩn ISO)
+              </span>
+            </div>
+            <div class="w-full h-2 bg-pink-100 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-pink-400 to-rose-500 rounded-full w-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hộp kết luận AI hóm hỉnh -->
+        <div class="bg-gradient-to-br from-pink-50/90 to-rose-50/90 border border-pink-200/90 rounded-2xl p-3.5 text-xs leading-relaxed text-slate-700 text-justify shadow-sm mb-3">
+          <div class="font-bold text-pink-700 mb-1 flex items-center gap-1">
+            <span>🤖</span> THÔNG CÁO TỪ THUẬT TOÁN AI:
+          </div>
+          "Hệ thống AI đã ghi nhận những đánh giá hoàn toàn tự nguyện, không hề có sự ép buộc nào từ Quý cô! Tú IT vô cùng xúc động và xin chân thành cảm ơn những lời khen có cánh này!"
+        </div>
+
+        <!-- Nút tiếp tục chuyển sang cổng mật mã -->
+        <button onclick="goToPage(4)" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white font-extrabold text-base tracking-wide shadow-lg shadow-pink-500/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+          <span>TIẾP TỤC: NHẬP MẬT MÃ NHẬN QUÀ</span>
+          <span class="text-lg">🔐</span>
+        </button>
+      </section>
+
+
+      <!-- ======================================================= -->
+      <!-- PAGE 4: CỔNG MẬT MÃ CÁ NHÂN HÓA (SECRET PASSCODE GATE)   -->
+      <!-- ======================================================= -->
+      <section id="page-4" class="page-view hidden flex-col animate-fade-in">
+        <div class="text-center mb-4">
+          <!-- Ổ khóa tình yêu -->
+          <div class="w-20 h-20 mx-auto mb-2 bg-white rounded-3xl border-2 border-pink-200 shadow-md flex items-center justify-center text-4xl">
+            🔐
+          </div>
+          <h2 class="text-xl font-extrabold text-pink-700 mb-1">
+            CỔNG MẬT MÃ YÊU THƯƠNG
+          </h2>
+          <p class="text-xs text-slate-600 px-3 leading-relaxed">
+            Mỗi người phụ nữ tuyệt vời trong gia đình đều có một vị trí độc nhất. Vui lòng nhập <strong class="text-pink-600">Mật Mã Bí Mật</strong> mà Tú IT đã gửi riêng cho Quý cô:
+          </p>
+        </div>
+
+        <!-- Khung nhập mật mã -->
+        <div id="passcode-card" class="glass-card rounded-3xl p-5 border border-pink-200 mb-3 shadow-md">
+          <label for="passcode-input" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+            Mật mã định danh cá nhân:
+          </label>
+          <div class="relative">
+            <input 
+              type="text" 
+              id="passcode-input" 
+              placeholder="NHẬP MẬT MÃ TẠI ĐÂY" 
+              class="w-full py-3.5 px-4 text-center text-base sm:text-lg font-extrabold tracking-widest text-pink-700 bg-pink-50/70 border-2 border-pink-300 rounded-2xl focus:outline-none focus:border-pink-500 focus:bg-white uppercase transition-all shadow-inner"
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="characters"
+              spellcheck="false"
+              onkeydown="if(event.key === 'Enter') verifyPasscode()"
+            />
+          </div>
+
+          <!-- Thông báo lỗi khi nhập sai mật mã -->
+          <div id="passcode-error" class="hidden mt-3 p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold text-center leading-normal">
+            ❌ Mật mã chưa chính xác rồi! Quý cô kiểm tra lại tin nhắn của Tú IT nhé! 🥺
+          </div>
+
+          <!-- Nút mở khóa tâm thư -->
+          <button onclick="verifyPasscode()" class="w-full mt-4 py-4 px-6 rounded-2xl bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white font-extrabold text-base tracking-wide shadow-lg shadow-pink-500/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+            <span>MỞ KHÓA TÂM THƯ</span>
+            <span class="text-lg">💌</span>
+          </button>
+        </div>
+
+        <!-- Danh sách gợi ý nhanh dành cho trải nghiệm mượt mà -->
+        <div class="text-center">
+          <button onclick="togglePasscodeHints()" class="text-xs font-semibold text-pink-600 underline hover:text-pink-800 transition-colors">
+            💡 Quý cô quên mã? Nhấn vào đây để xem danh sách mật mã
+          </button>
+
+          <div id="passcode-hints-modal" class="hidden mt-3 p-3 bg-white/90 rounded-2xl border border-pink-200 text-[11px] text-left text-slate-700 shadow-lg">
+            <div class="font-bold text-pink-700 mb-1.5 flex items-center justify-between">
+              <span>DANH SÁCH 6 MẬT MÃ GIA ĐÌNH:</span>
+              <span class="text-slate-400 font-normal">(Nhấn để chọn nhanh)</span>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5 font-mono">
+              <button onclick="fillPasscode('MEYEUVIDAI')" class="p-1.5 text-left rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 truncate font-bold">1. MEYEUVIDAI (Mẹ)</button>
+              <button onclick="fillPasscode('DIHUONGPEO')" class="p-1.5 text-left rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 truncate font-bold">2. DIHUONGPEO (Dì Hương)</button>
+              <button onclick="fillPasscode('DITHOMTHUI')" class="p-1.5 text-left rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 truncate font-bold">3. DITHOMTHUI (Dì Thơm)</button>
+              <button onclick="fillPasscode('DINGATMOM')" class="p-1.5 text-left rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 truncate font-bold">4. DINGATMOM (Dì Ngát)</button>
+              <button onclick="fillPasscode('DINGANGO')" class="p-1.5 text-left rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 truncate font-bold">5. DINGANGO (Dì Nga)</button>
+              <button onclick="fillPasscode('BANGOAIDANGCAP')" class="p-1.5 text-left rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-700 border border-pink-200 truncate font-bold">6. BANGOAIDANGCAP (Bà Ngoại)</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ======================================================= -->
+      <!-- PAGE 5: ĐẠI TIỆC BÙNG NỔ & TÂM THƯ RIÊNG BIỆT           -->
+      <!-- ======================================================= -->
+      <section id="page-5" class="page-view hidden flex-col pb-4">
+        <!-- Huy hiệu chào mừng hoàn thành -->
+        <div class="text-center mb-2">
+          <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-pink-500 text-white text-xs font-bold shadow-md shadow-pink-500/30">
+            <span>🎉</span> CHÚC MỪNG 20/10 • PHỤ NỮ VIỆT NAM
+          </div>
+        </div>
+
+        <!-- 1. KHUNG ẢNH KỶ NIỆM (POLAROID STYLE) -->
+        <div class="relative w-full max-w-[290px] mx-auto my-2">
+          <!-- Miếng dán băng dính hồng pastel ở góc -->
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 bg-pink-200/80 backdrop-blur-xs rounded-sm shadow-xs rotate-[-2deg] z-30 flex items-center justify-center text-[10px] font-bold text-pink-700 border border-pink-300">
+            20.10.2026 💖
+          </div>
+
+          <!-- Khung ảnh Polaroid viền trắng bóng đổ -->
+          <div class="bg-white p-3 pb-5 rounded-2xl shadow-xl border border-pink-200 rotate-[-1deg] hover:rotate-0 transition-transform duration-300">
+            <div id="polaroid-image-wrapper" class="w-full aspect-[4/3] rounded-xl overflow-hidden bg-gradient-to-tr from-pink-100 to-rose-50 flex items-center justify-center border border-pink-100">
+              <!-- Ảnh minh họa mặc định hoặc ảnh do Tú IT cấu hình -->
+            </div>
+            <!-- Chú thích viết tay phong cách nghệ thuật -->
+            <div id="polaroid-caption" class="font-script text-xl text-center text-pink-700 mt-2.5 font-bold">
+              Người Phụ Nữ Tuyệt Vời 🌸
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. NỘI DUNG TÂM THƯ RIÊNG BIỆT -->
+        <article class="glass-card rounded-3xl p-5 my-2.5 border border-pink-200 shadow-md">
+          <!-- Tiêu đề bức thư -->
+          <h2 id="letter-title" class="text-lg sm:text-xl font-extrabold text-pink-700 leading-snug mb-3 text-center">
+            Tiêu đề bức thư
+          </h2>
+
+          <!-- Nội dung chi tiết bức thư -->
+          <div id="letter-body" class="text-sm leading-relaxed text-slate-800 text-justify space-y-2.5">
+            <!-- Được render chính xác 100% từ RECIPIENT_DATA -->
+          </div>
+
+          <!-- Đường phân cách nhẹ -->
+          <div class="my-4 border-t border-dashed border-pink-200"></div>
+
+          <!-- 3. Chữ ký cuối thư -->
+          <div class="text-right">
+            <div class="text-xs text-slate-500 font-medium">Người gửi với tất cả tình yêu thương:</div>
+            <div class="text-sm font-extrabold text-pink-700 mt-1">
+              Chàng Kỹ sư của Gia đình — Ngô Quang Tú (Tú IT) 💻❤️
+            </div>
+          </div>
+        </article>
+
+        <!-- 4. CÁC NÚT TƯƠNG TÁC CUỐI TRANG -->
+        <div class="space-y-2 mt-2">
+          <!-- Nút 1: Bắn pháo hoa tiếp -->
+          <button onclick="triggerGrandFinaleCelebration()" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-pink-500 to-rose-500 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-pink-500/30 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2">
+            <span>🎆 BẮN PHÁO HOA TIẾP!</span>
+          </button>
+
+          <!-- Nút phụ: Sao chép lời chúc & Đổi mã khác -->
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="copyLetterContent()" class="py-2.5 px-3 rounded-xl bg-white/80 border border-pink-200 text-pink-700 font-bold text-xs hover:bg-white active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-2xs">
+              <span>📋</span> Sao chép lời chúc
+            </button>
+            <button onclick="goToPage(4)" class="py-2.5 px-3 rounded-xl bg-white/80 border border-pink-200 text-pink-700 font-bold text-xs hover:bg-white active:scale-95 transition-all flex items-center justify-center gap-1.5 shadow-2xs">
+              <span>🔐</span> Nhập mã khác
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Bottom Footer nhỏ nhắn -->
+    <footer class="px-5 py-2.5 text-center text-[11px] font-semibold text-pink-600/70 border-t border-pink-200/40 z-20 bg-white/30">
+      Made with 💖 by Tú IT • 20/10/2026
+    </footer>
+
+  </main>
+
+  <!-- ======================================================================= -->
+  <!-- JAVASCRIPT LOGIC ĐẦY ĐỦ 100% (KHÔNG VIẾT TẮT, KHÔNG TODO)               -->
+  <!-- ======================================================================= -->
+  <script>
+    // =========================================================================
+    // 💖 1. CẤU HÌNH DỮ LIỆU NGƯỜI NHẬN - TÚ IT CHÈN LINK ẢNH VÀO ĐÂY
+    // Tú chỉ cần dán link ảnh thật của Mẹ, các Dì và Bà vào trường 'image'.
+    // Nếu để trống (""), hệ thống sẽ tự động hiển thị Avatar nghệ thuật độc quyền!
+    // =========================================================================
+    const RECIPIENT_DATA = {
+      "MEYEUVIDAI": {
+        name: "Mẹ Yêu Vĩ Đại",
+        role: "Hệ điều hành vĩ đại nhất của con",
+        title: "Gửi Mẹ Yêu Vĩ Đại Nhất Của Con 👑💖",
+        image: "", // 👉 TÚ IT CHÈN LINK ẢNH MẸ VÀO ĐÂY (Ví dụ: "https://.../me.jpg")
+        avatarType: "mom",
+        caption: "Mẹ Yêu Vĩ Đại Của Con 👑💖",
+        content: "Mẹ ơi nhân ngày 20/10, chàng trai IT của Mẹ muốn gửi ngàn lời yêu thương và biết ơn sâu sắc nhất đến Mẹ. Cảm ơn Mẹ vì tất cả những hy sinh thầm lặng, những bữa cơm thịnh soạn cho riêng con, những lần đôn đáo chuẩn bị đồ cho con đem đi học, sự tần tảo và tình yêu thương vô bờ bến đã nuôi dưỡng con trưởng thành. Hay nói cách khác, sự thảnh thơi, tự tin mà con có khi con bước chân ra đời là nhờ có mẹ (vầng có cả bố), Dù con có xây dựng được bao nhiêu hệ thống lớn ngoài kia, trở thành anh này ông nọ, thì Mẹ vẫn luôn là 'hệ điều hành' vĩ đại và ấm áp nhất trong cuộc đời con. Chúc Mẹ của con luôn dồi dào sức khỏe, mãi trẻ đẹp, bình an và luôn nở nụ cười thật tươi mỗi ngày. Con yêu Mẹ rất nhiều!"
+      },
+      "DIHUONGPEO": {
+        name: "Dì Hương",
+        role: "Kiên cường, bất khuất & sang trọng",
+        title: "Chúc Mừng 20/10 Dì Hương Kiên Cường Bất Khuất Mạnh Mẽ Xinh Đẹp Sang Trọng 🌸✨",
+        image: "", // 👉 TÚ IT CHÈN LINK ẢNH DÌ HƯƠNG VÀO ĐÂY
+        avatarType: "dihuong",
+        caption: "Dì Hương Xinh Đẹp Sang Trọng 🌸✨",
+        content: "Gửi Dì Hương của con! Nhân ngày Phụ nữ Việt Nam 20/10, cháu Tú IT chúc Dì luôn tràn ngập niềm vui, trẻ trung, rạng rỡ và hạnh phúc tràn đầy. Cảm ơn Dì vì lúc nào cũng quan tâm, yêu thương, sự hiện diện của dì mang lại sự tích cực ấm áp cho cả gia đình. Bên cạnh đó, ké chúc nhóc con Sumo, yes Sumo hay ăn chóng lớn, ngoan ngoãn vâng lời, học hành chăm chỉ, sớm có công việc để mẹ được nhờ nhé. Túm lại, chúc Dì mọi công việc đều hanh thông, tiền vào như nước và mãi là người dì tuyệt vời của con nhé!"
+      },
+      "DITHOMTHUI": {
+        name: "Dì Thơm",
+        role: "Lung linh lấp lánh & quý phái",
+        title: "Chúc Mừng 20/10 Dì Thơm Rạng Rỡ, Lung Linh Lấp Láng, Mongolia, Xinh Đẹp, Quý Phái 🌷💖",
+        image: "", // 👉 TÚ IT CHÈN LINK ẢNH DÌ THƠM VÀO ĐÂY
+        avatarType: "dithom",
+        caption: "Dì Thơm Quý Phái 🌷💖",
+        content: "Mật mã nhìn hơi trêu một xíu thôi, nhưng là thật ahaha cũng như tình cảm của cháu Tú IT dành cho Dì là 100 điểm chân thành á nha! Nhân ngày 20/10, cháu chúc Dì luôn xinh đẹp, tươi tắn, ngập tràn năng lượng tích cực. Và chúc Dì Thúi trong công việc sẽ thơm, sớm chốt được nhiều thương vụ bạc tỷ nhé. Chúc Dì công việc thuận lợi, vạn sự như ý, luôn được chú Hải Dớ yêu thương chiều chuộng và có một ngày lễ thật nhiều hoa, nhiều quà, và hãy luôn nhớ rằng cả nhà luôn bên dì nheee, đặc biệt là con hehehe, con sống ẩn & ít liên lạc vậy thôi chứ cần là có mặt liền."
+      },
+      "DINGATMOM": {
+        name: "Dì Ngát",
+        role: "Thiên tài số học & Người dì kiên cường",
+        title: "Chúc Mừng 20/10 Dì Ngát Xinh Đẹp, Hổ Báo Cáo ... ,Giỏi Giang, Thông Minh, Kiên Cường, Vị Tha, Mạnh Mẽ, Thiên Tài Số Học 🌺🎉",
+        image: "", // 👉 TÚ IT CHÈN LINK ẢNH DÌ NGÁT VÀO ĐÂY
+        avatarType: "dingat",
+        caption: "Dì Ngát Xinh Đẹp 🌺🎉",
+        content: "Nếu cuộc đời này chi một bài test, thì chúc mừng Dì Ngát đã 10 điểm của cháu Tú, trên bao nhiêu thì hên xui nhé! Nhưng nếu nói về sự gồ gề ấm áp, sự sâu sắc bốc đồng, sự yêu thương nhẫn nhịn, sự phấn đấu vượt lên nghịch cảnh khi liên tục bị kéo xuống thì con thật sự bái phục dì, đôi khi con nghĩ đi chùa với dì quay qua quay lại không biết lạy ai luôn á, hahaha giỡn zui giỡn zui. Nhân ngày 20/10, cháu chúc Dì luôn giữ vững sự tươi trẻ, yêu đời, sức khỏe dồi dào, ắt sẽ có tài lộc rực rỡ đến thôi. Cảm ơn Dì vì sự ấm áp, gần gũi và luôn yêu thương con cháu trong nhà. Chúc Dì một ngày 20/10 ngập tràn tiếng cười và hạnh phúc!"
+      },
+      "DINGANGO": {
+        name: "Dì Nga",
+        role: "Bạch Nguyệt Quang Quốc Dân nơi Paris xa ấy",
+        title: "Chúc Mừng 20/10 Dì Nga Dịu Dàng, Thông Thái, Đẳng Cấp, Bạch Nguyệt Quang Quốc Dân, Ánh Sao Rực Rỡ, Độc Lập, Mạnh Mẽ 💐💕",
+        image: "", // 👉 TÚ IT CHÈN LINK ẢNH DÌ NGA VÀO ĐÂY
+        avatarType: "dinga",
+        caption: "Dì Nga Dịu Dàng 💐💕",
+        content: "Gửi Dì Nga thương mến nơi Paris xa ấy! Vẫn lời hẹn ngày nào, \"Một ngày nào đó chúng ta sẽ gặp nhau ở Madrid\", con vẫn chưa khi nào quên điều đó. Rồi giờ chúc gì trời? Để nghĩ cái coi..., Ý là cũng khó lói á, cái gì tốt đẹp nhất hồi xông nhà nói hết trơn rồi, kiểu bị bí văn hahahaha, giờ mà chúc dì thì cỡ nào cũng là lặp từ hết trơn á hahaha.\n\nThôi nói chứ, chúc dì Nga ở nơi xa chân cứng đá mềm, kiên cường vững bền, tự tin tỏa sáng, hành trình rực rỡ, phủ ánh hào quang. Và là ngày 20/10, chúc người con gái xứ Đại Việt đang công tác ở Kinh Đô Ánh Sáng sẽ không phải đi tìm, mà niềm vui trong cuộc sống sẽ luôn ở trong dì, sẽ luôn có được tình yêu thương, sự trân trọng của những người bạn, đồng nghiệp và đặc biệt là người sẽ bước vào cuộc sống của dì. Một lần nữa, nước Pháp xa xôi hãy bao dung, che trở cho dì tôi nhé!"
+      },
+      "BANGOAIDANGCAP": {
+        name: "Bà Ngoại",
+        role: "Rừng cây đại thụ che chở cả đại gia đình",
+        title: "Kính Chúc Bà Ngoại Đẳng Cấp Vũ Trụ Chói Lóa Lung Linh Rạng Ngời của con ❤️",
+        image: "", // 👉 TÚ IT CHÈN LINK ẢNH BÀ NGOẠI VÀO ĐÂY
+        avatarType: "grandma",
+        caption: "Kính Yêu Bà Ngoại 👵❤️",
+        content: "Bà Ngoại kính yêu của con! Nhân ngày Phụ nữ Việt Nam 20/10, cháu Tú xin kính chúc Bà luôn dồi dào sức khỏe, mãi mãi trẻ trung vui cười hở mười ... à mà thôi hehehe, tâm an trí sáng để mãi là bóng cây, à phải là rừng cây đại thụ che chở cho đại gia đình mình. Nụ cười hiền hậu và tình yêu thương bao la của Bà luôn là điểm tựa quý giá nhất của chúng con, từ những bữa cơm, những sự chuẩn bị tươm tất cái ăn cái mặc cho con ngày ấy, những sự quan tâm yêu thương hiện tại con sẽ mãi khắc sâu trong lòng. Con hứa sẽ luôn học tập, làm việc thật tốt để Bà luôn tự hào về thằng cháu IT này mỗi khi nhắc đến hahahahahaha!"
+      }
+    };
+
+    // =========================================================================
+    // 🎧 2. HỆ THỐNG ÂM THANH THUẦN WEB AUDIO API (KHÔNG CẦN TẢI FILE NGOÀI)
+    // =========================================================================
+    let audioContext = null;
+    let isSoundEnabled = true;
+
+    function getAudioContext() {
+      if (!audioContext) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) {
+          audioContext = new AudioCtx();
+        }
+      }
+      if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      return audioContext;
+    }
+
+    function toggleAudio() {
+      isSoundEnabled = !isSoundEnabled;
+      const icon = document.getElementById('sound-icon');
+      if (icon) {
+        icon.textContent = isSoundEnabled ? '🔊' : '🔇';
+      }
+    }
+
+    function playSfx(type) {
+      if (!isSoundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        if (type === 'dodge') {
+          // Âm thanh "boing/whoosh" khi nút nhảy trốn
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(750, now + 0.12);
+          gain.gain.setValueAtTime(0.18, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } else if (type === 'success') {
+          // Hợp âm chúc mừng khi chọn 10 điểm (C5 - E5 - G5 - C6)
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, index) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + index * 0.08);
+            gain.gain.setValueAtTime(0.15, now + index * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.08 + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + index * 0.08);
+            osc.stop(now + index * 0.08 + 0.35);
+          });
+        } else if (type === 'error') {
+          // Âm thanh báo lỗi mật mã
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(160, now);
+          osc.frequency.setValueAtTime(110, now + 0.12);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.28);
+        } else if (type === 'fanfare') {
+          // Fanfare bùng nổ khi mở tâm thư
+          const fanfareNotes = [440, 554.37, 659.25, 880, 1108.73];
+          fanfareNotes.forEach((freq, index) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + index * 0.1);
+            gain.gain.setValueAtTime(0.2, now + index * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.1 + 0.5);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + index * 0.1);
+            osc.stop(now + index * 0.1 + 0.5);
+          });
+        }
+      } catch (err) {
+        console.warn('Audio play error:', err);
+      }
+    }
+
+
+    // =========================================================================
+    // 🧭 3. ĐIỀU HƯỚNG MÀN HÌNH (SPA NAVIGATION)
+    // =========================================================================
+    let currentPage = 1;
+
+    function goToPage(pageNumber) {
+      // Ẩn tất cả các trang
+      const allPages = document.querySelectorAll('.page-view');
+      allPages.forEach(page => {
+        page.classList.add('hidden');
+      });
+
+      // Hiển thị trang mục tiêu
+      const targetPage = document.getElementById(`page-${pageNumber}`);
+      if (targetPage) {
+        targetPage.classList.remove('hidden');
+        currentPage = pageNumber;
+      }
+
+      // Cuộn lên đầu trang ứng dụng
+      const mainContainer = document.getElementById('app-container');
+      if (mainContainer) {
+        mainContainer.scrollTop = 0;
+      }
+
+      // Xử lý các logic kích hoạt riêng biệt của từng trang
+      if (pageNumber === 2) {
+        initQuiz();
+      } else if (pageNumber === 4) {
+        setTimeout(() => {
+          const input = document.getElementById('passcode-input');
+          if (input) input.focus();
+        }, 300);
+      }
+    }
+
+
+    // =========================================================================
+    // 🎯 4. LOGIC GÓC SỰ THẬT HÓM HỈNH (DODGING QUIZ - 3 CÂU HỎI)
+    // =========================================================================
+    const QUIZ_QUESTIONS = [
+      {
+        step: "CÂU HỎI 1/3",
+        progress: "33.3%",
+        question: "Độ ngoan ngoãn, lễ phép và biết điều của Tú IT đạt bao nhiêu điểm?"
+      },
+      {
+        step: "CÂU HỎI 2/3",
+        progress: "66.6%",
+        question: "Mức độ đẹp trai, phong độ và đáng tin cậy của chàng IT này?"
+      },
+      {
+        step: "CÂU HỎI 3/3",
+        progress: "100%",
+        question: "Mức độ xứng đáng nhận được nhiều tình thương và sự tha thứ cho mọi lần mắc lỗi?"
+      }
+    ];
+
+    const TAUNT_MESSAGES = [
+      "Ấn nhầm rồi Quý cô ơi! 😜",
+      "Hệ thống phát hiện đánh giá thiếu công tâm! 🚨",
+      "Tay hơi trượt rồi, nút số 10 ở ngay dưới cơ! 👉",
+      "Lỗi 404: Không tìm thấy điểm số dưới 10! 💻",
+      "AI từ chối ghi nhận điểm dưới 10! 🤖",
+      "Cảnh báo: Phát hiện thao tác chống đối sự thật! 😂",
+      "Chỉ có một chân lý duy nhất thôi Quý cô ơi! ✨",
+      "Nút này trơn lắm, không bấm được đâu ạ! 🏃‍♂️💨",
+      "Tú IT ngoan thế này mà bấm dưới 10 là dỗi nha! 🥺",
+      "Bấm vào đây làm gì, điểm 10 vàng kim đang chờ kìa! 🌟"
+    ];
+
+    let currentQuestionIndex = 0;
+    let lastTauntIndex = -1;
+
+    function initQuiz() {
+      currentQuestionIndex = 0;
+      renderCurrentQuestion();
+    }
+
+    function renderCurrentQuestion() {
+      const q = QUIZ_QUESTIONS[currentQuestionIndex];
+      const stepLabel = document.getElementById('quiz-step-label');
+      const progressBar = document.getElementById('quiz-progress-bar');
+      const questionText = document.getElementById('quiz-question-text');
+      const tauntBanner = document.getElementById('taunt-banner');
+
+      if (stepLabel) stepLabel.textContent = q.step;
+      if (progressBar) progressBar.style.width = q.progress;
+      if (questionText) questionText.textContent = q.question;
+      if (tauntBanner) tauntBanner.classList.add('opacity-0');
+
+      renderDodgingButtons();
+    }
+
+    // Render 9 nút từ 1 đến 9 vào trong arena
+    function renderDodgingButtons() {
+      const arena = document.getElementById('dodge-arena');
+      if (!arena) return;
+
+      arena.innerHTML = '';
+
+      // Màu sắc pastel phong phú cho các nút 1-9
+      const btnColors = [
+        "bg-pink-100 text-pink-700 border-pink-300",
+        "bg-rose-100 text-rose-700 border-rose-300",
+        "bg-fuchsia-100 text-fuchsia-700 border-fuchsia-300",
+        "bg-purple-100 text-purple-700 border-purple-300",
+        "bg-red-100 text-red-700 border-red-300",
+        "bg-orange-100 text-orange-700 border-orange-300",
+        "bg-pink-100 text-pink-700 border-pink-300",
+        "bg-rose-100 text-rose-700 border-rose-300",
+        "bg-fuchsia-100 text-fuchsia-700 border-fuchsia-300"
+      ];
+
+      for (let i = 1; i <= 9; i++) {
+        const btn = document.createElement('button');
+        btn.id = `dodge-btn-${i}`;
+        btn.className = `dodge-btn py-2.5 px-3.5 rounded-2xl font-extrabold text-sm border shadow-sm ${btnColors[i - 1]} select-none active:scale-90`;
+        btn.innerHTML = `<span class="opacity-70 text-xs">Điểm</span> ${i}`;
+
+        // LẮNG NGHE ĐỒNG THỜI TOUCHSTART, POINTERDOWN, MOUSEOVER
+        // Chặn hoàn toàn click chọn điểm 1 - 9!
+        const triggerDodge = (e) => {
+          if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          dodgeButton(btn);
+        };
+
+        btn.addEventListener('touchstart', triggerDodge, { passive: false });
+        btn.addEventListener('pointerdown', triggerDodge);
+        btn.addEventListener('mouseover', triggerDodge);
+        btn.addEventListener('click', triggerDodge);
+
+        arena.appendChild(btn);
+      }
+    }
+
+    // Hàm tính toán tọa độ ngẫu nhiên an toàn để nút không bao giờ văng ra ngoài
+    function dodgeButton(btn) {
+      const arena = document.getElementById('dodge-arena');
+      if (!arena) return;
+
+      const arenaRect = arena.getBoundingClientRect();
+      const btnWidth = btn.offsetWidth || 64;
+      const btnHeight = btn.offsetHeight || 42;
+
+      // Khoảng đệm an toàn tính từ viền arena
+      const padding = 10;
+      const maxLeft = Math.max(10, arenaRect.width - btnWidth - padding);
+      const maxTop = Math.max(10, arenaRect.height - btnHeight - padding);
+
+      const randomLeft = Math.floor(padding + Math.random() * (maxLeft - padding));
+      const randomTop = Math.floor(padding + Math.random() * (maxTop - padding));
+
+      btn.style.position = 'absolute';
+      btn.style.left = `${randomLeft}px`;
+      btn.style.top = `${randomTop}px`;
+      btn.style.zIndex = '40';
+
+      // Tạo góc xoay nghiêng ngẫu nhiên tạo cảm giác giật mình chạy trốn
+      const randomRotate = (Math.random() - 0.5) * 35;
+      btn.style.transform = `rotate(${randomRotate}deg) scale(0.92)`;
+      setTimeout(() => {
+        btn.style.transform = 'rotate(0deg) scale(1)';
+      }, 180);
+
+      // Phát âm thanh & hiển thị câu trêu chọc
+      playSfx('dodge');
+      showRandomTaunt();
+    }
+
+    function showRandomTaunt() {
+      const tauntBanner = document.getElementById('taunt-banner');
+      const tauntText = document.getElementById('taunt-text');
+      if (!tauntBanner || !tauntText) return;
+
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * TAUNT_MESSAGES.length);
+      } while (randomIndex === lastTauntIndex && TAUNT_MESSAGES.length > 1);
+
+      lastTauntIndex = randomIndex;
+      tauntText.textContent = TAUNT_MESSAGES[randomIndex];
+
+      tauntBanner.classList.remove('opacity-0');
+      tauntBanner.classList.add('animate-shake');
+      setTimeout(() => {
+        tauntBanner.classList.remove('animate-shake');
+      }, 450);
+    }
+
+    // Xử lý khi nhấn nút điểm 10 (Nút duy nhất bấm được)
+    function handleScore10() {
+      playSfx('success');
+
+      // Bắn pháo giấy nhỏ chúc mừng
+      confetti({
+        particleCount: 35,
+        spread: 60,
+        origin: { y: 0.75 },
+        colors: ['#EC407A', '#F48FB1', '#FFD54F', '#FFFFFF']
+      });
+
+      // Hiển thị thông báo ghi nhận
+      const tauntBanner = document.getElementById('taunt-banner');
+      const tauntText = document.getElementById('taunt-text');
+      if (tauntBanner && tauntText) {
+        tauntText.textContent = "✅ Ghi nhận 10/10! Tuyệt vời quá Quý cô ơi! 💖";
+        tauntBanner.classList.remove('opacity-0');
+      }
+
+      // Rung nhẹ điện thoại nếu hỗ trợ
+      if (navigator.vibrate) {
+        navigator.vibrate(80);
+      }
+
+      // Chuyển sang câu hỏi kế tiếp sau 600ms
+      setTimeout(() => {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < QUIZ_QUESTIONS.length) {
+          renderCurrentQuestion();
+        } else {
+          // Hoàn thành cả 3 câu hỏi -> Chuyển sang Page 3 Dashboard
+          goToPage(3);
+        }
+      }, 600);
+    }
+
+
+    // =========================================================================
+    // 🔐 5. XÁC THỰC MẬT MÃ (SECRET PASSCODE ROUTING)
+    // =========================================================================
+    let currentRecipient = null;
+
+    function verifyPasscode() {
+      const input = document.getElementById('passcode-input');
+      const errorDiv = document.getElementById('passcode-error');
+      const card = document.getElementById('passcode-card');
+      if (!input) return;
+
+      // Chuẩn hóa chuỗi mật mã: trim() và toUpperCase()
+      const enteredCode = input.value.trim().toUpperCase();
+
+      if (RECIPIENT_DATA[enteredCode]) {
+        // Mật mã hợp lệ!
+        currentRecipient = RECIPIENT_DATA[enteredCode];
+        if (errorDiv) errorDiv.classList.add('hidden');
+
+        // Chuyển sang màn hình 5 và kích hoạt đại tiệc
+        renderPage5(currentRecipient);
+        goToPage(5);
+        triggerGrandFinaleCelebration();
+      } else {
+        // Mật mã sai -> Rung lắc và hiện lỗi
+        playSfx('error');
+        if (errorDiv) errorDiv.classList.remove('hidden');
+        if (card) {
+          card.classList.add('animate-shake');
+          setTimeout(() => {
+            card.classList.remove('animate-shake');
+          }, 500);
+        }
+        if (navigator.vibrate) {
+          navigator.vibrate([100, 50, 100]);
+        }
+      }
+    }
+
+    function fillPasscode(code) {
+      const input = document.getElementById('passcode-input');
+      if (input) {
+        input.value = code;
+        verifyPasscode();
+      }
+    }
+
+    function togglePasscodeHints() {
+      const modal = document.getElementById('passcode-hints-modal');
+      if (modal) {
+        modal.classList.toggle('hidden');
+      }
+    }
+
+
+    // =========================================================================
+    // 🌸 6. KHO AVATAR NGHỆ THUẬT (SVG PLACEHOLDERS SIÊU DỄ THƯƠNG)
+    // =========================================================================
+    function getFallbackAvatarSVG(type) {
+      switch (type) {
+        case 'mom':
+          // Vương miện Nữ hoàng & Tình yêu
+          return `
+            <svg class="w-24 h-24" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="46" fill="#FCE4EC" stroke="#F48FB1" stroke-width="3"/>
+              <!-- Crown -->
+              <path d="M30 38L38 48L50 32L62 48L70 38L66 58H34L30 38Z" fill="#FBC02D" stroke="#F57F17" stroke-width="2" stroke-linejoin="round"/>
+              <circle cx="30" cy="36" r="3" fill="#E91E63"/>
+              <circle cx="50" cy="30" r="3.5" fill="#E91E63"/>
+              <circle cx="70" cy="36" r="3" fill="#E91E63"/>
+              <!-- Mom face -->
+              <circle cx="50" cy="62" r="14" fill="#FFE0B2"/>
+              <!-- Smile & Eyes -->
+              <path d="M44 60C45 58 47 58 48 60" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+              <path d="M52 60C53 58 55 58 56 60" stroke="#5D4037" stroke-width="2" stroke-linecap="round"/>
+              <path d="M46 68C48 71 52 71 54 68" stroke="#E91E63" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="43" cy="64" r="2" fill="#FF80AB" opacity="0.6"/>
+              <circle cx="57" cy="64" r="2" fill="#FF80AB" opacity="0.6"/>
+            </svg>
+          `;
+        case 'grandma':
+          // Bà Ngoại phúc hậu với kính và búi tóc hiền từ
+          return `
+            <svg class="w-24 h-24" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="46" fill="#F3E5F5" stroke="#CE93D8" stroke-width="3"/>
+              <!-- Hair bun -->
+              <circle cx="50" cy="28" r="10" fill="#E0E0E0" stroke="#BDBDBD" stroke-width="2"/>
+              <!-- Head -->
+              <circle cx="50" cy="52" r="20" fill="#FFE0B2"/>
+              <!-- Glasses -->
+              <circle cx="43" cy="50" r="5" stroke="#795548" stroke-width="2" fill="white" fill-opacity="0.5"/>
+              <circle cx="57" cy="50" r="5" stroke="#795548" stroke-width="2" fill="white" fill-opacity="0.5"/>
+              <line x1="48" y1="50" x2="52" y2="50" stroke="#795548" stroke-width="2"/>
+              <!-- Gentle Smile -->
+              <path d="M46 60C48 63 52 63 54 60" stroke="#D81B60" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="40" cy="57" r="2.5" fill="#F48FB1" opacity="0.7"/>
+              <circle cx="60" cy="57" r="2.5" fill="#F48FB1" opacity="0.7"/>
+            </svg>
+          `;
+        default:
+          // Các Dì: Nụ cười trẻ trung rạng rỡ + Cài hoa xinh xắn
+          return `
+            <svg class="w-24 h-24" viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="46" fill="#FFF0F5" stroke="#F48FB1" stroke-width="3"/>
+              <!-- Head -->
+              <circle cx="50" cy="52" r="18" fill="#FFE0B2"/>
+              <!-- Hair Flower -->
+              <circle cx="34" cy="38" r="5" fill="#FF4081"/>
+              <circle cx="34" cy="38" r="2" fill="#FFEB3B"/>
+              <!-- Eyes & Smile -->
+              <path d="M43 49C44 47 46 47 47 49" stroke="#3E2723" stroke-width="2" stroke-linecap="round"/>
+              <path d="M53 49C54 47 56 47 57 49" stroke="#3E2723" stroke-width="2" stroke-linecap="round"/>
+              <path d="M45 58C48 62 52 62 55 58" stroke="#E91E63" stroke-width="2.2" stroke-linecap="round"/>
+              <!-- Cheeks -->
+              <circle cx="41" cy="54" r="2.5" fill="#FF80AB" opacity="0.7"/>
+              <circle cx="59" cy="54" r="2.5" fill="#FF80AB" opacity="0.7"/>
+            </svg>
+          `;
+      }
+    }
+
+
+    // =========================================================================
+    // 💌 7. KẾT XUẤT NỘI DUNG PAGE 5 THEO ĐÚNG MẬT MÃ
+    // =========================================================================
+    function renderPage5(data) {
+      const imgWrapper = document.getElementById('polaroid-image-wrapper');
+      const caption = document.getElementById('polaroid-caption');
+      const title = document.getElementById('letter-title');
+      const body = document.getElementById('letter-body');
+
+      if (!imgWrapper || !caption || !title || !body) return;
+
+      // 1. Render Ảnh Polaroid
+      if (data.image && data.image.trim() !== "") {
+        imgWrapper.innerHTML = `
+          <img src="${data.image}" alt="${data.name}" class="w-full h-full object-cover">
+        `;
+      } else {
+        imgWrapper.innerHTML = `
+          <div class="flex flex-col items-center justify-center p-2 text-center">
+            ${getFallbackAvatarSVG(data.avatarType)}
+            <span class="text-[11px] font-bold text-pink-600 mt-1">${data.role}</span>
+          </div>
+        `;
+      }
+
+      // 2. Chú thích Polaroid
+      caption.textContent = data.caption || `${data.name} 💖`;
+
+      // 3. Tiêu đề thư
+      title.textContent = data.title;
+
+      // 4. Nội dung chi tiết thư (giữ nguyên từng câu từ và hỗ trợ xuống dòng)
+      const paragraphs = data.content.split('\n\n').filter(p => p.trim() !== '');
+      body.innerHTML = paragraphs.map(p => `
+        <p class="indent-4 leading-relaxed">${p.replace(/\n/g, '<br>')}</p>
+      `).join('');
+    }
+
+
+    // =========================================================================
+    // 🎆 8. ĐẠI TIỆC BÙNG NỔ (GRAND FINALE CELEBRATION)
+    // =========================================================================
+    function triggerGrandFinaleCelebration() {
+      // 1. Âm thanh chúc mừng
+      playSfx('fanfare');
+
+      // 2. Hiệu ứng rung điện thoại vật lý
+      if (navigator.vibrate) {
+        navigator.vibrate([150, 80, 150, 80, 300]);
+      }
+
+      // 3. Hiệu ứng rung nhẹ toàn bộ khung thiệp trong 0.6s
+      const appContainer = document.getElementById('app-container');
+      if (appContainer) {
+        appContainer.classList.remove('screen-shake-active');
+        void appContainer.offsetWidth; // Force Reflow
+        appContainer.classList.add('screen-shake-active');
+        setTimeout(() => {
+          appContainer.classList.remove('screen-shake-active');
+        }, 650);
+      }
+
+      // 4. Pháo hoa cầm tay bắn liên tục từ 2 bên (Dual Side Cannons Confetti trong 3.5s)
+      launchDualCannons(3500);
+    }
+
+    function launchDualCannons(durationMs) {
+      if (typeof confetti !== 'function') return;
+
+      const animationEnd = Date.now() + durationMs;
+      const festiveColors = ['#EC407A', '#F48FB1', '#FF80AB', '#FFD54F', '#FFF9C4', '#FFFFFF', '#D81B60'];
+
+      (function frame() {
+        // Pháo bắn từ góc dưới bên trái (origin: { x: 0, y: 0.85 }, angle: 60)
+        confetti({
+          particleCount: 4,
+          angle: 60,
+          spread: 60,
+          origin: { x: 0, y: 0.85 },
+          colors: festiveColors,
+          zIndex: 9999
+        });
+
+        // Pháo bắn từ góc dưới bên phải (origin: { x: 1, y: 0.85 }, angle: 120)
+        confetti({
+          particleCount: 4,
+          angle: 120,
+          spread: 60,
+          origin: { x: 1, y: 0.85 },
+          colors: festiveColors,
+          zIndex: 9999
+        });
+
+        if (Date.now() < animationEnd) {
+          requestAnimationFrame(frame);
+        }
+      })();
+    }
+
+
+    // =========================================================================
+    // 📋 9. SAO CHÉP LỜI CHÚC VÀO CLIPBOARD
+    // =========================================================================
+    function copyLetterContent() {
+      if (!currentRecipient) return;
+
+      const fullMessage = `${currentRecipient.title}\n\n${currentRecipient.content}\n\nKý tên: Chàng Kỹ sư của Gia đình — Ngô Quang Tú (Tú IT) 💻❤️`;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(fullMessage).then(() => {
+          alert('Đã sao chép lời chúc vào khay nhớ tạm! Quý cô có thể dán vào Zalo/Tin nhắn nhé! 📋✨');
+        }).catch(() => {
+          fallbackCopyText(fullMessage);
+        });
+      } else {
+        fallbackCopyText(fullMessage);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert('Đã sao chép lời chúc vào khay nhớ tạm! 📋✨');
+      } catch (err) {
+        alert('Không thể tự động sao chép. Quý cô hãy chụp ảnh màn hình bức thư này nhé! 📸');
+      }
+      document.body.removeChild(textArea);
+    }
+
+
+    // =========================================================================
+    // 🚀 10. KHỞI CHẠY ỨNG DỤNG LẦN ĐẦU TIÊN
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      // Bắt đầu tại Page 1
+      goToPage(1);
+
+      // Kích hoạt AudioContext khi người dùng chạm lần đầu tiên
+      const unlockAudio = () => {
+        getAudioContext();
+        window.removeEventListener('click', unlockAudio);
+        window.removeEventListener('touchstart', unlockAudio);
+      };
+      window.addEventListener('click', unlockAudio);
+      window.addEventListener('touchstart', unlockAudio);
+    });
+  </script>
+</body>
+</html>
